@@ -11,9 +11,6 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
 
-   protected $connection = 'mongodb';
-
-   protected $collection = 'users';
    
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
