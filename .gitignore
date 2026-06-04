@@ -19,9 +19,12 @@
 /storage/*.key
 /storage/pail
 /vendor
+<<<<<<< HEAD
 config/storage/firebase/gemstore_firebase.json
 storage/firebase/
 .env
+=======
+>>>>>>> 57e3a3c16027b5828658d5a8808aec4e9bdb2d1e
 Homestead.json
 Homestead.yaml
 Thumbs.db
