@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gem Station - Checkout</title>
+
+<style>
+body{
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background:#0f172a;
+    color:white;
+}
+
+.container{
+    max-width:800px;
+    margin:50px auto;
+    padding:20px;
+}
+
+.card{
+    background:#1e293b;
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 10px 30px rgba(0,0,0,.3);
+}
+
+.title{
+    font-size:32px;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+
+.info{
+    background:#334155;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+}
+
+.label{
+    color:#94a3b8;
+    font-size:14px;
+}
+
+.value{
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+.total{
+    font-size:30px;
+    color:#38bdf8;
+    font-weight:bold;
+}
+
+.btn{
+    width:100%;
+    border:none;
+    padding:15px;
+    border-radius:12px;
+    background:#2563eb;
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+}
+
+.btn:hover{
+    background:#1d4ed8;
+}
+
+.back{
+    margin-top:15px;
+    width:100%;
+    border:none;
+    padding:15px;
+    border-radius:12px;
+    background:#475569;
+    color:white;
+    cursor:pointer;
+}
+
+.success{
+    display:none;
+    margin-top:20px;
+    padding:15px;
+    border-radius:10px;
+    background:#14532d;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <div class="title">
+            💎 Checkout Gem Station
+        </div>
+
+        <div class="info">
+
+            <div class="label">Game</div>
+            <div class="value" id="game">-</div>
+
+            <div class="label">Produk</div>
+            <div class="value" id="product">-</div>
+
+            <div class="label">Harga</div>
+            <div class="total" id="price">-</div>
+
+        </div>
+
+        <button class="btn" onclick="buyNow()">
+            Beli Sekarang
+        </button>
+
+        <button class="back" onclick="window.location.href='index.html'">
+            Kembali ke Marketplace
+        </button>
+
+        <div class="success" id="success">
+            ✅ Pesanan berhasil dibuat!
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+document.getElementById('game').innerText =
+localStorage.getItem('selectedGame') || '-';
+
+document.getElementById('product').innerText =
+localStorage.getItem('selectedProduct') || '-';
+
+document.getElementById('price').innerText =
+localStorage.getItem('selectedPrice') || '-';
+
+function buyNow(){
+
+    document.getElementById('success').style.display = 'block';
+
+    setTimeout(()=>{
+        alert('Terima kasih telah berbelanja di Gem Station!');
+    },500);
+
+}
+
+</script>
+
+</body>
+</html>
