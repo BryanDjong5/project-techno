@@ -557,6 +557,7 @@ body {
     height:100%;
     object-fit:cover;
     border-radius:12px;
+<<<<<<< HEAD:public/style.css
 }
 
 /* ===== SEARCH DROPDOWN ===== */
@@ -616,4 +617,6 @@ body {
   color: var(--gs-muted);
   font-size: 13px;
   text-align: center;
+=======
+>>>>>>> ed728a98a519843b6e59bba4e09cd8e6ef2e8eb0:style.css
 }
