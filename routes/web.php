@@ -1,19 +1,23 @@
 <?php
 
-<<<<<<< HEAD
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SearchController;
 
-=======
-use Illuminate\Support\Facades\Route;
->>>>>>> 57e3a3c16027b5828658d5a8808aec4e9bdb2d1e
+Route::get('/', [HomeController::class, 'index']);
+Route::get('/index.html', [HomeController::class, 'index']);
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/buy', function () {
+    return response()->file(public_path('buy.html'));
 });
-<<<<<<< HEAD
+
+Route::get('/search-game', [SearchController::class, 'searchGame']);
+Route::post('/buy', [OrderController::class, 'buyNow']);
+
 
 Route::get('/login', [LoginController::class, 'showLogin']);
 Route::post('/login', [LoginController::class, 'login']);
@@ -24,7 +28,6 @@ Route::post('/register', [RegisterController::class, 'register']);
 Route::middleware('auth')->group(function () {
     Route::get('/menungguPembayaran/{orderId}', [PaymentController::class, 'waitPayment']);
     Route::post('/pembayaran/konfirmasi', [PaymentController::class, 'confirmPayment']);
-    Route::post('/pembayaran/batal/(orderId}', [PaymentController::class, 'cancelPayment']);
+    Route::post('/pembayaran/batal/{orderId}', [PaymentController::class, 'cancelPayment']);
 });
-=======
->>>>>>> 57e3a3c16027b5828658d5a8808aec4e9bdb2d1e
+

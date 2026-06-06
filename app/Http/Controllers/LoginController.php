@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 class LoginController extends Controller {
     public function loginPengguna(Request $request){
     $request->validate([
-        "email" => $request->email,
+        "email" => 'required|email',
         "password" => Hash::make($request->password)
     ]);
 

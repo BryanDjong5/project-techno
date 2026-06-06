@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gem Station - Checkout</title>
-
 <style>
 body{
     margin:0;
@@ -13,11 +12,7 @@ body{
     color:white;
 }
 
-.container{
-    max-width:800px;
-    margin:50px auto;
-    padding:20px;
-}
+.container{ max-width:800px; margin:50px auto; padding:20px; }
 
 .card{
     background:#1e293b;
@@ -26,11 +21,7 @@ body{
     box-shadow:0 10px 30px rgba(0,0,0,.3);
 }
 
-.title{
-    font-size:32px;
-    font-weight:bold;
-    margin-bottom:20px;
-}
+.title{ font-size:32px; font-weight:bold; margin-bottom:20px; }
 
 .info{
     background:#334155;
@@ -39,10 +30,7 @@ body{
     margin-bottom:20px;
 }
 
-.label{
-    color:#94a3b8;
-    font-size:14px;
-}
+.label{ color:#94a3b8; font-size:14px; }
 
 .value{
     font-size:20px;
@@ -67,9 +55,7 @@ body{
     cursor:pointer;
 }
 
-.btn:hover{
-    background:#1d4ed8;
-}
+.btn:hover{ background:#1d4ed8; }
 
 .back{
     margin-top:15px;
@@ -95,15 +81,11 @@ body{
 <body>
 
 <div class="container">
-
     <div class="card">
 
-        <div class="title">
-            💎 Checkout Gem Station
-        </div>
+        <div class="title">💎 Checkout Gem Station</div>
 
         <div class="info">
-
             <div class="label">Game</div>
             <div class="value" id="game">-</div>
 
@@ -112,7 +94,6 @@ body{
 
             <div class="label">Harga</div>
             <div class="total" id="price">-</div>
-
         </div>
 
         <button class="btn" onclick="buyNow()">
@@ -128,7 +109,6 @@ body{
         </div>
 
     </div>
-
 </div>
 
 <script>
@@ -142,14 +122,44 @@ localStorage.getItem('selectedProduct') || '-';
 document.getElementById('price').innerText =
 localStorage.getItem('selectedPrice') || '-';
 
-function buyNow(){
+async function buyNow(){
+    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    document.getElementById('success').style.display = 'block';
+    try {
+        const res = await fetch("http://127.0.0.1:8000/buy", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                game: localStorage.getItem('selectedGame'),
+                product: localStorage.getItem('selectedProduct'),
+                price: localStorage.getItem('selectedPrice')
+            })
+        });
 
-    setTimeout(()=>{
-        alert('Terima kasih telah berbelanja di Gem Station!');
-    },500);
+        const data = await res.json();
 
+        console.log("RESPONSE:", data);
+
+        if (res.ok && data && data.data) {
+
+            document.getElementById('success').style.display = 'block';
+
+            setTimeout(()=>{
+                alert('Terima kasih telah berbelanja di Gem Station!');
+            },500);
+
+        } else {
+            alert(data.message || "Saldo tidak cukup");
+        } 
+    }
+        catch (err) {
+        console.error(err);
+        alert("Server tidak bisa diakses / Laravel error");
+        
+    }
 }
 
 </script>

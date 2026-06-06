@@ -7,10 +7,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-<<<<<<< HEAD
         "kreait/laravel-firebase": "6.2",
-=======
->>>>>>> 57e3a3c16027b5828658d5a8808aec4e9bdb2d1e
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "mongodb/laravel-mongodb": "^5.7"

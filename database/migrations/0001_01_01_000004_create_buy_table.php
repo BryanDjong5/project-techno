@@ -10,18 +10,13 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('kode_order')->unique();
-            $table->decimal('total_harga', 15, 2);
-            $table->enum('status', [
-                'menunggu_pembayaran',
-                'menunggu_verifikasi',
-                'paid',
-                'cancelled',
-            ])->default('menunggu_pembayaran');
+            $table->string('game');
+            $table->string('product');
+            $table->decimal('price', 15, 2);
+            $table->string('status')->default('pending');
             $table->timestamps();
-        });
-    }
+            });
+}
 
     public function down(): void
     {

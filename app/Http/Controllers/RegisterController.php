@@ -12,23 +12,21 @@ class RegisterController extends Controller {
             'password' => 'required|min:6',
         ]);
 
-        $user = User::create([
-            'email' => $request->email,
-            'password' => Hash::make($request->password)
-
-        ]);
-
         $user = User::where('email', $request->email)->first();
 
-        if(!$user){
+        if($user){
             return response()->json([
                 'message' => 'Akun telah dipakai user lain'
             ], 400);
         }
 
+        $user = User::create([
+            'email' => $request->email,
+            'password' => Hash::make($request->password)
+        ]);
+
         return response()->json([
             'message' => 'Register berhasil'
-
         ]);
     }
 }

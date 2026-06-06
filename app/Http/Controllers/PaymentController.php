@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\PaymentMethod;
-use App\Services\FirebaseService;        // ← FIREBASE: tambah ini
+use App\Services\FirebaseService;        
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -14,7 +14,7 @@ class PaymentController extends Controller
 {
     protected $firebase;
 
-    public function __construct(FirebaseService $firebase)  // ← FIREBASE: inject
+    public function __construct(FirebaseService $firebase) 
     {
         $this->firebase = $firebase;
     }
