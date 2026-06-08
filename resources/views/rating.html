@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gem Station - Beri Ulasan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: #1a9be6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* NAV */
+        .nav {
+            background: #1a9be6;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-back { color: white; font-size: 22px; cursor: pointer; text-decoration: none; }
+        .nav-logo { color: white; font-weight: 700; font-size: 18px; }
+        .nav-icons { display: flex; gap: 12px; color: white; font-size: 22px; }
+
+        /* CARD */
+        .card {
+            background: white;
+            margin: 16px;
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 16px;
+        }
+
+        /* ORDER INFO */
+        .order-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .order-icon {
+            width: 50px;
+            height: 50px;
+            background: #e0e7ff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+        .order-id {
+            font-weight: 700;
+            font-size: 14px;
+            color: #1a1a2e;
+        }
+        .order-game {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        /* STARS */
+        .stars {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .stars input[type="radio"] {
+            display: none;
+        }
+        .star-img {
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+        }
+
+        /* TEXTAREA */
+        .label {
+            font-size: 13px;
+            color: #374151;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 13px;
+            color: #374151;
+            resize: none;
+            outline: none;
+            margin-bottom: 16px;
+        }
+        textarea:focus { border-color: #3b82f6; }
+
+        /* CHECKBOX */
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .checkbox-row input { width: 16px; height: 16px; cursor: pointer; }
+        .checkbox-row label { font-size: 13px; color: #374151; cursor: pointer; }
+
+        /* BUTTONS */
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+        }
+        .btn-kirim {
+            flex: 1;
+            padding: 14px;
+            background: #38bdf8;
+            color: white;
+            font-weight: 700;
+            font-size: 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Exo 2', sans-serif;
+        }
+        .btn-kirim:hover { background: #0ea5e9; }
+        .btn-batal {
+            flex: 1;
+            padding: 14px;
+            background: #94a3b8;
+            color: white;
+            font-weight: 700;
+            font-size: 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Exo 2', sans-serif;
+        }
+        .btn-batal:hover { background: #64748b; }
+
+        /* SUCCESS */
+        .success {
+            display: none;
+            margin: 0 16px;
+            padding: 12px;
+            background: #dcfce7;
+            border-radius: 10px;
+            color: #166534;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* FOOTER */
+        .footer {
+            margin-top: auto;
+            background: #1a9be6;
+            padding: 16px;
+            text-align: center;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+        .footer-links a {
+            color: white;
+            font-size: 12px;
+            text-decoration: none;
+        }
+        .footer-icons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        .footer-copy {
+            color: white;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav">
+    <a class="nav-back" href="/">←</a>
+    <div class="nav-logo">GeM<span style="color:#fbbf24">STATION</span></div>
+    <div class="nav-icons">
+        <span>👤</span>
+        <span>🛒</span>
+    </div>
+</div>
+
+<!-- CARD -->
+<div class="card">
+    <div class="card-title">Beri Ulasan Pembelian</div>
+
+    <div class="order-info" id="orderInfo"
+        data-order-id="{{ $order->id ?? '' }}"
+        data-csrf="{{ csrf_token() }}">
+        <div class="order-icon">🎮</div>
+        <div>
+            <div class="order-id">Ringkasan Pesanan <span id="orderId">#{{ $order->id ?? '-' }}</span></div>
+            <div class="order-game">Item Game: <span id="gameName">{{ $order->game ?? '-' }}</span></div>
+        </div>
+</div>
+
+    <div class="stars" id="stars">
+    <input type="radio" name="rating" id="star5" value="5">
+    <label for="star5"><img src="/image/star.png" alt="★" class="star-img" id="img5"></label>
+
+    <input type="radio" name="rating" id="star4" value="4">
+    <label for="star4"><img src="/image/star.png" alt="★" class="star-img" id="img4"></label>
+
+    <input type="radio" name="rating" id="star3" value="3">
+    <label for="star3"><img src="/image/star.png" alt="★" class="star-img" id="img3"></label>
+
+    <input type="radio" name="rating" id="star2" value="2">
+    <label for="star2"><img src="/image/star.png" alt="★" class="star-img" id="img2"></label>
+
+    <input type="radio" name="rating" id="star1" value="1">
+    <label for="star1"><img src="/image/star.png" alt="★" class="star-img" id="img1"></label>
+</div>
+
+    <div class="label">Pilih ulasan anda:</div>
+    <textarea id="ulasan" placeholder="Ceritakan pengalaman anda menggunakan item/akun ini"></textarea>
+
+    <div class="checkbox-row">
+        <input type="checkbox" id="media">
+        <label for="media">Tambahkan foto/video</label>
+    </div>
+</div>
+
+<div class="success" id="success">✅ Ulasan berhasil dikirim! Terima kasih.</div>
+
+<!-- BUTTONS -->
+<div class="btn-row">
+    <button class="btn-kirim" onclick="kirimUlasan()">Kirim</button>
+    <button class="btn-batal" onclick="window.location.href='/'">Batal</button>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    <div class="footer-links">
+        <a href="#">Tentang</a>
+        <a href="#">Syarat</a>
+        <a href="#">Hubungi Kami</a>
+        <a href="#">FAQ</a>
+        <a href="#">Blog</a>
+    </div>
+    <div class="footer-icons">
+        <span>📘</span><span>📷</span><span>✖️</span><span>🎮</span>
+    </div>
+    <div class="footer-copy">
+        @2026 GeMSTATion<br>Game Market Station
+    </div>
+</div>
+<script src="/rating.js"></script>
+</body>
+</html>

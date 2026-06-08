@@ -7,6 +7,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\RatingController;
 
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/index.html', [HomeController::class, 'index']);
@@ -32,5 +33,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/menungguPembayaran/{orderId}', [PaymentController::class, 'waitPayment']);
     Route::post('/pembayaran/konfirmasi', [PaymentController::class, 'confirmPayment']);
     Route::post('/pembayaran/batal/{orderId}', [PaymentController::class, 'cancelPayment']);
+
+    Route::get('/rating/{orderId}', [RatingController::class, 'showRating']);
+    Route::post('/rating', [RatingController::class, 'kirimRating']);
 });
 
