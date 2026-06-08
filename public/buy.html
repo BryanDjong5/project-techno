@@ -123,27 +123,40 @@ document.getElementById('price').innerText =
 localStorage.getItem('selectedPrice') || '-';
 
 async function buyNow(){
-    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const csrfRes = await fetch('/csrf-token');
+    const csrfData = await csrfRes.json();
+    const token = csrfData.token;
 
     try {
         const res = await fetch("http://127.0.0.1:8000/buy", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/json"
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest"
             },
             body: JSON.stringify({
                 game: localStorage.getItem('selectedGame'),
                 product: localStorage.getItem('selectedProduct'),
                 price: localStorage.getItem('selectedPrice')
-            })
+            }),
+            credentials: "include"
         });
 
         const data = await res.json();
-
         console.log("RESPONSE:", data);
 
-        if (res.ok && data && data.data) {
+        if (res.status === 401 || res.status === 403) {
+            alert("Maaf, Anda belum login! Silakan login terlebih dahulu.");
+            return;
+        }
+
+        if (!res.ok) {
+            alert("❌ " + (data.message || "Terjadi kesalahan"));
+            return;
+        }
+
+        if (res.ok && data.data) {
 
             document.getElementById('success').style.display = 'block';
 
@@ -151,8 +164,6 @@ async function buyNow(){
                 alert('Terima kasih telah berbelanja di Gem Station!');
             },500);
 
-        } else {
-            alert(data.message || "Saldo tidak cukup");
         } 
     }
         catch (err) {

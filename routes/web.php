@@ -18,6 +18,9 @@ Route::get('/buy', function () {
 Route::get('/search-game', [SearchController::class, 'searchGame']);
 Route::post('/buy', [OrderController::class, 'buyNow']);
 
+Route::get('/csrf-token', function () {
+    return response()->json(['token' => csrf_token()]);
+});
 
 Route::get('/login', [LoginController::class, 'showLogin']);
 Route::post('/login', [LoginController::class, 'login']);
