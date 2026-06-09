@@ -33,7 +33,7 @@ async function registerPengguna() {
         if (data.status) {
             msgBox.style.color = 'green';
             msgBox.innerText   = '✅ ' + data.message;
-            setTimeout(() => window.location.href = '/', 1000);
+            setTimeout(() => window.location.href = '/login', 1000);
         } else {
             msgBox.style.color = 'red';
             msgBox.innerText   = '❌ ' + (data.message || 'Registrasi gagal');
@@ -82,7 +82,7 @@ async function loginPengguna() {
         if (data.status) {
             msgBox.style.color = 'green';
             msgBox.innerText   = '✅ ' + data.message;
-            setTimeout(() => window.location.href = '/login', 1000);
+            setTimeout(() => window.location.href = '/', 1000);
         } else {
             msgBox.style.color = 'red';
             msgBox.innerText   = '❌ ' + data.message;
