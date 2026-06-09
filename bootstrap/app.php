@@ -14,7 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->validateCsrfTokens(except: [
             '/buy',
-            '/rating'
+            '/rating',
+            '/chat/send',
+            '/sell/create',
+            '/sell/delete',
+            '/sell/status',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

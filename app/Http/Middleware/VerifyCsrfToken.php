@@ -21,5 +21,8 @@ class VerifyCsrfToken extends Middleware
         '/cart/clear',  
         '/chat/send',   
         '/user-info',
+        '/sell/data',
+        '/sell/create',
+        '/sell/delete/*',
     ];
 }

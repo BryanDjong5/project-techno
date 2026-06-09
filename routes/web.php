@@ -10,6 +10,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\SellController;
 
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/index.html', [HomeController::class, 'index']);
@@ -59,5 +60,14 @@ Route::middleware('auth')->group(function () {
 Route::get('/chat', [ChatController::class, 'showChat']);
 Route::get('/user-info', [ChatController::class, 'userInfo']);
 Route::post('/chat/send',[ChatController::class, 'send']);
+});
+
+Route::get('/sell', [SellController::class, 'showSell']);
+
+Route::middleware('auth')->group(function () {
+    Route::get('/sell/data',           [SellController::class, 'getMyListings']);
+    Route::post('/sell/create',        [SellController::class, 'createListing']);
+    Route::delete('/sell/delete/{id}', [SellController::class, 'deleteListing']);
+    Route::post('/sell/status/{id}',   [SellController::class, 'updateStatus']);
 });
 

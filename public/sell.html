@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gem Station - Jual Item</title>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: #0a0b14;
+            color: #e8eaf6;
+            min-height: 100vh;
+        }
+        .nav {
+            background: #0d0f1c;
+            border-bottom: 1px solid rgba(80,120,255,0.18);
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            height: 60px;
+        }
+        .nav-back { color: #8892b0; text-decoration: none; font-size: 20px; }
+        .nav-back:hover { color: #3a8eff; }
+        .nav-logo {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #3a8eff, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .container { max-width: 900px; margin: 32px auto; padding: 0 24px; }
+        .page-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+        .page-title span { color: #3a8eff; }
+
+        /* FORM */
+        .form-card {
+            background: #161928;
+            border: 1px solid rgba(80,120,255,0.18);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+        .form-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #e8eaf6;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group.full { grid-column: 1 / -1; }
+        .form-group label {
+            font-size: 12px;
+            color: #8892b0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            background: #1a1d2e;
+            border: 1px solid rgba(80,120,255,0.2);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: #e8eaf6;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus { border-color: #3a8eff; }
+        .form-group select option { background: #1a1d2e; }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .img-preview {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            display: none;
+            margin-top: 8px;
+        }
+        .btn-submit {
+            width: 100%;
+            margin-top: 20px;
+            padding: 13px;
+            background: linear-gradient(135deg, #3a8eff, #8b5cf6);
+            color: white;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .btn-submit:hover { opacity: 0.9; }
+        .msg {
+            margin-top: 12px;
+            font-size: 13px;
+            text-align: center;
+            min-height: 20px;
+        }
+
+        /* LIST */
+        .section-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .section-title span { color: #3a8eff; }
+        .listing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+        }
+        .listing-card {
+            background: #161928;
+            border: 1px solid rgba(80,120,255,0.18);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: border-color 0.15s;
+        }
+        .listing-card:hover { border-color: rgba(58,142,255,0.4); }
+        .listing-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            background: #1e2240;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+        .listing-img-placeholder {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(135deg, #1a1a2e, #2a2a4e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+        .listing-body { padding: 14px; }
+        .listing-game {
+            font-size: 10px;
+            color: #8892b0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        .listing-product {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e8eaf6;
+            margin-bottom: 4px;
+        }
+        .listing-desc {
+            font-size: 12px;
+            color: #8892b0;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        .listing-price {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #3a8eff;
+            margin-bottom: 10px;
+        }
+        .listing-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .badge-status {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 10px;
+        }
+        .badge-active  { background: rgba(34,197,94,0.15); color: #22c55e; }
+        .badge-sold    { background: rgba(239,68,68,0.15);  color: #ef4444; }
+        .badge-inactive{ background: rgba(148,163,184,0.15);color: #94a3b8; }
+        .btn-delete {
+            background: rgba(239,68,68,0.1);
+            border: 1px solid rgba(239,68,68,0.3);
+            color: #ef4444;
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Exo 2', sans-serif;
+        }
+        .btn-delete:hover { background: rgba(239,68,68,0.2); }
+
+        /* EMPTY */
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #8892b0;
+            font-size: 14px;
+        }
+
+        /* LOGIN WARNING */
+        .login-warning {
+            display: none;
+            padding: 14px;
+            background: rgba(239,68,68,0.1);
+            border: 1px solid rgba(239,68,68,0.3);
+            border-radius: 10px;
+            color: #fca5a5;
+            font-size: 13px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .login-warning a { color: #3a8eff; }
+
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="nav">
+    <a class="nav-back" href="/">←</a>
+    <div class="nav-logo">💎 GEM STATION</div>
+</div>
+
+<div class="container">
+    <div class="page-title">🏷️ Jual <span>Item</span> Kamu</div>
+
+    <div class="login-warning" id="loginWarning">
+        ⚠️ Kamu harus <a href="/login">login</a> dulu untuk bisa jual item.
+    </div>
+
+    <!-- FORM -->
+    <div class="form-card" id="formCard">
+        <div class="form-title">+ Tambah Listing Baru</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Nama Game</label>
+                <input type="text" id="game" placeholder="Mobile Legends, Roblox, dll" />
+            </div>
+            <div class="form-group">
+                <label>Nama Produk</label>
+                <input type="text" id="product" placeholder="Weekly Diamond Pass, dll" />
+            </div>
+            <div class="form-group">
+                <label>Kategori</label>
+                <select id="category">
+                    <option value="topup">Top Up</option>
+                    <option value="item">Item & Skin</option>
+                    <option value="account">Akun</option>
+                    <option value="gamekey">Game Key</option>
+                    <option value="currency">Currency</option>
+                    <option value="giftcard">Gift Card</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Harga (Rp)</label>
+                <input type="number" id="price" placeholder="50000" min="1" />
+            </div>
+            <div class="form-group full">
+                <label>Deskripsi</label>
+                <textarea id="description" placeholder="Jelaskan produk yang kamu jual..."></textarea>
+            </div>
+            <div class="form-group full">
+                <label>Foto Produk (opsional)</label>
+                <input type="file" id="imageFile" accept="image/*" onchange="previewImage(this)" />
+                <img id="imgPreview" class="img-preview" />
+            </div>
+        </div>
+        <button class="btn-submit" onclick="buatListing()">🚀 Posting Listing</button>
+        <div class="msg" id="formMsg"></div>
+    </div>
+
+    <!-- MY LISTINGS -->
+    <div class="section-title">📦 Listing <span>Saya</span></div>
+    <div class="listing-grid" id="listingGrid">
+        <div class="empty">Loading...</div>
+    </div>
+</div>
+
+<script>
+function previewImage(input) {
+    const preview = document.getElementById('imgPreview');
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            preview.src     = e.target.result;
+            preview.style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+async function getCsrf() {
+    const res  = await fetch('/csrf-token');
+    const data = await res.json();
+    return data.token;
+}
+
+async function init() {
+    const res  = await fetch('/user-info', { credentials: 'include' });
+    const data = await res.json();
+
+    if (!data.status) {
+        document.getElementById('loginWarning').style.display = 'block';
+        document.getElementById('formCard').style.display     = 'none';
+        document.getElementById('listingGrid').innerHTML = '';
+        return;
+    }
+
+    loadListings();
+}
+
+async function loadListings() {
+    const res  = await fetch('/sell/data', { credentials: 'include' });
+    const data = await res.json();
+    const grid = document.getElementById('listingGrid');
+
+    if (!data.data || data.data.length === 0) {
+        grid.innerHTML = '<div class="empty">Belum ada listing. Tambah listing pertamamu!</div>';
+        return;
+    }
+
+    grid.innerHTML = '';
+    data.data.forEach(item => {
+        const card = document.createElement('div');
+        card.classList.add('listing-card');
+
+        const imgHtml = item.image
+            ? `<img src="/storage/${item.image}" style="width:100%;height:120px;object-fit:cover;">`
+            : `<div class="listing-img-placeholder">🎮</div>`;
+
+        const badgeClass = item.status === 'active' ? 'badge-active'
+            : item.status === 'sold' ? 'badge-sold' : 'badge-inactive';
+
+        card.innerHTML = `
+            ${imgHtml}
+            <div class="listing-body">
+                <div class="listing-game">${item.game}</div>
+                <div class="listing-product">${item.product}</div>
+                <div class="listing-desc">${item.description || '-'}</div>
+                <div class="listing-price">Rp ${parseInt(item.price).toLocaleString('id-ID')}</div>
+                <div class="listing-footer">
+                    <span class="badge-status ${badgeClass}">${item.status}</span>
+                    <button class="btn-delete" onclick="hapusListing(${item.id})">🗑️ Hapus</button>
+                </div>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+}
+
+async function buatListing() {
+    const game        = document.getElementById('game').value.trim();
+    const product     = document.getElementById('product').value.trim();
+    const category    = document.getElementById('category').value;
+    const price       = document.getElementById('price').value;
+    const description = document.getElementById('description').value.trim();
+    const imageFile   = document.getElementById('imageFile').files[0];
+    const msg         = document.getElementById('formMsg');
+
+    if (!game || !product || !price) {
+        msg.style.color   = 'red';
+        msg.innerText     = '⚠️ Game, produk, dan harga wajib diisi!';
+        return;
+    }
+
+    const token    = await getCsrf();
+    const formData = new FormData();
+    formData.append('game',        game);
+    formData.append('product',     product);
+    formData.append('category',    category);
+    formData.append('price',       price);
+    formData.append('description', description);
+    if (imageFile) formData.append('image', imageFile);
+
+    const res  = await fetch('/sell/create', {
+        method:      'POST',
+        headers:     { 'X-CSRF-TOKEN': token },
+        credentials: 'include',
+        body:        formData
+    });
+
+    const data = await res.json();
+
+    if (data.status) {
+        msg.style.color = 'green';
+        msg.innerText   = '✅ ' + data.message;
+
+        // Reset form
+        document.getElementById('game').value        = '';
+        document.getElementById('product').value     = '';
+        document.getElementById('price').value       = '';
+        document.getElementById('description').value = '';
+        document.getElementById('imageFile').value   = '';
+        document.getElementById('imgPreview').style.display = 'none';
+
+        loadListings();
+    } else {
+        msg.style.color = 'red';
+        msg.innerText   = '❌ ' + (data.message || 'Gagal membuat listing');
+    }
+}
+
+async function hapusListing(id) {
+    if (!confirm('Hapus listing ini?')) return;
+
+    const token = await getCsrf();
+
+    const res  = await fetch(`/sell/delete/${id}`, {
+        method:      'POST',
+        headers:     {
+            'X-CSRF-TOKEN':  token,
+            'Content-Type':  'application/json',
+            'X-HTTP-Method-Override': 'DELETE'
+        },
+        credentials: 'include',
+    });
+
+    const data = await res.json();
+
+    if (data.status) {
+        loadListings();
+    } else {
+        alert('❌ ' + data.message);
+    }
+}
+
+init();
+</script>
+</body>
+</html>
