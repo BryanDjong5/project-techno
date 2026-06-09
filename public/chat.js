@@ -1,23 +1,32 @@
 const firebaseConfig = {
-  apiKey: "AIzaSyDrN7IQffZ9myo9_ignJhs3gwCYjiAExY4",
-  authDomain: "gemstore-90db2.firebaseapp.com",
-  databaseURL: "https://gemstore-90db2-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "gemstore-90db2",
-  storageBucket: "gemstore-90db2.firebasestorage.app",
-  messagingSenderId: "268517643179",
-  appId: "1:268517643179:web:38d622ccd493b9baaff8ee",
-  measurementId: "G-3TDRX2VM26"
+    apiKey:            "AIzaSyDrN7IQffZ9myo9_ignJhs3gwCYjiAExY4",
+    authDomain:        "gemstore-90db2.firebaseapp.com",
+    databaseURL:       "https://gemstore-90db2-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId:         "gemstore-90db2",
+    storageBucket:     "gemstore-90db2.firebasestorage.app",
+    messagingSenderId: "268517643179",
+    appId:             "1:268517643179:web:38d622ccd493b9baaff8ee",
+    measurementId:     "G-3TDRX2VM26"
 };
 
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 const db = firebase.database();
 
-let currentUser  = null;
-let roomId       = null;
+let currentUser = null;
+let roomId      = null;
 
 async function initChat() {
     try {
-        const res  = await fetch('/user-info', { credentials: 'include' });
+        const res  = await fetch('/user-info', {
+            credentials: 'include',
+            headers: {
+                'Accept':            'application/json',
+                'X-Requested-With':  'XMLHttpRequest'
+            }
+        });
+
         const data = await res.json();
 
         if (!data.status) {
@@ -28,8 +37,7 @@ async function initChat() {
         }
 
         currentUser = data.user;
-
-        roomId = 'room_' + currentUser.id;
+        roomId      = 'room_' + currentUser.id;
 
         document.getElementById('sellerName').innerText   = 'Gem Station Support';
         document.getElementById('sellerAvatar').innerText = 'GS';
@@ -60,10 +68,9 @@ function listenMessages() {
         }
 
         empty.style.display = 'none';
-
         let lastDate = '';
 
-        Object.values(messages).forEach(msg => {
+        Object.entries(messages).forEach(([key, msg]) => {
             const date = new Date(msg.timestamp).toLocaleDateString('id-ID', {
                 day: 'numeric', month: 'long', year: 'numeric'
             });
@@ -88,7 +95,10 @@ function listenMessages() {
                 ${!isMine ? `<div class="bubble-avatar">GS</div>` : ''}
                 <div class="bubble-wrapper">
                     <div class="bubble">${escapeHtml(msg.text)}</div>
-                    <div class="bubble-time">${time}</div>
+                    <div class="bubble-time">
+                        ${time}
+                        ${isMine ? `<span class="btn-hapus" onclick="hapusPesan('${key}')">🗑️</span>` : ''}
+                    </div>
                 </div>
                 ${isMine ? `<div class="bubble-avatar">${currentUser.name[0].toUpperCase()}</div>` : ''}
             `;
@@ -124,11 +134,29 @@ async function kirimPesan() {
     });
 
     await fetch('/chat/send', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method:      'POST',
+        headers:     { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ room_id: roomId, text })
+        body:        JSON.stringify({ room_id: roomId, text })
     });
+}
+
+let keyToDelete = null;
+
+function hapusPesan(key) {
+    keyToDelete = key;
+    document.getElementById('hapusModal').classList.add('show');
+}
+
+function tutupModal() {
+    keyToDelete = null;
+    document.getElementById('hapusModal').classList.remove('show');
+}
+
+async function konfirmasiHapus() {
+    if (!keyToDelete) return;
+    await db.ref('chats/' + roomId + '/messages/' + keyToDelete).remove();
+    tutupModal();
 }
 
 function escapeHtml(text) {

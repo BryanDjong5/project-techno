@@ -28,11 +28,7 @@
             height: 60px;
             flex-shrink: 0;
         }
-        .nav-back {
-            color: #8892b0;
-            text-decoration: none;
-            font-size: 20px;
-        }
+        .nav-back { color: #8892b0; text-decoration: none; font-size: 20px; }
         .nav-back:hover { color: #3a8eff; }
         .nav-logo {
             font-family: 'Rajdhani', sans-serif;
@@ -60,14 +56,8 @@
             font-weight: 700;
             color: white;
         }
-        .seller-info .seller-name {
-            font-size: 14px;
-            font-weight: 600;
-        }
-        .seller-info .seller-status {
-            font-size: 11px;
-            color: #22c55e;
-        }
+        .seller-info .seller-name { font-size: 14px; font-weight: 600; }
+        .seller-info .seller-status { font-size: 11px; color: #22c55e; }
         .nav-online {
             margin-left: auto;
             display: flex;
@@ -114,12 +104,9 @@
             width: 100%;
             margin-bottom: 4px;
         }
-        .bubble-row.theirs {
-            flex-direction: row;
-        }
-        .bubble-row.mine {
-            flex-direction: row-reverse;
-        }
+        .bubble-row.theirs { flex-direction: row; }
+        .bubble-row.mine   { flex-direction: row-reverse; }
+
         .bubble-avatar {
             width: 28px;
             height: 28px;
@@ -138,11 +125,10 @@
             display: flex;
             flex-direction: column;
             max-width: 65%;
-            align-items: flex-start;
         }
-        .bubble-row.mine .bubble-wrapper {
-            align-items: flex-end;
-        }
+        .bubble-row.mine .bubble-wrapper  { align-items: flex-end; }
+        .bubble-row.theirs .bubble-wrapper { align-items: flex-start; }
+
         .bubble {
             display: inline-block;
             padding: 10px 14px;
@@ -167,15 +153,89 @@
             font-size: 10px;
             margin-top: 3px;
             padding: 0 4px;
-        }
-        .bubble-row.mine .bubble-time {
             color: #8892b0;
-            text-align: right;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
-        .bubble-row.theirs .bubble-time {
+        .bubble-row.mine .bubble-time  { justify-content: flex-end; }
+        .bubble-row.theirs .bubble-time { justify-content: flex-start; }
+
+        .btn-hapus {
+            cursor: pointer;
+            font-size: 11px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .bubble-row.mine:hover .btn-hapus { opacity: 1; }
+
+        /* KONFIRMASI HAPUS */
+        .hapus-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+        .hapus-modal.show {
+            display: flex;
+        }
+        .hapus-box {
+            background: #161928;
+            border: 1px solid rgba(80,120,255,0.3);
+            border-radius: 16px;
+            padding: 24px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        .hapus-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+        .hapus-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #e8eaf6;
+            margin-bottom: 8px;
+        }
+        .hapus-desc {
+            font-size: 13px;
             color: #8892b0;
-            text-align: left;
+            margin-bottom: 20px;
         }
+        .hapus-btns {
+            display: flex;
+            gap: 10px;
+        }
+        .hapus-btn-batal {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            border: 1px solid rgba(80,120,255,0.2);
+            border-radius: 8px;
+            color: #8892b0;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .hapus-btn-batal:hover { border-color: #3a8eff; color: #3a8eff; }
+        .hapus-btn-hapus {
+            flex: 1;
+            padding: 10px;
+            background: rgba(239,68,68,0.15);
+            border: 1px solid rgba(239,68,68,0.3);
+            border-radius: 8px;
+            color: #ef4444;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .hapus-btn-hapus:hover { background: rgba(239,68,68,0.3); }
 
         /* TYPING */
         .typing {
@@ -303,7 +363,7 @@
 <div class="chat-container" id="chatContainer">
     <div class="chat-empty" id="chatEmpty">
         <div class="chat-empty-icon">💬</div>
-        <div class="chat-empty-text"></div>
+        <div class="chat-empty-text">Belum ada pesan. Mulai chat sekarang!</div>
     </div>
     <div class="typing" id="typing">
         <div class="bubble-avatar">S</div>
@@ -328,5 +388,17 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 <script src="/chat.js"></script>
+<!-- MODAL HAPUS -->
+<div class="hapus-modal" id="hapusModal">
+    <div class="hapus-box">
+        <div class="hapus-icon">🗑️</div>
+        <div class="hapus-title">Hapus Pesan?</div>
+        <div class="hapus-desc">Pesan ini akan dihapus permanen dan tidak bisa dikembalikan.</div>
+        <div class="hapus-btns">
+            <button class="hapus-btn-batal" onclick="tutupModal()">Batal</button>
+            <button class="hapus-btn-hapus" onclick="konfirmasiHapus()">Hapus</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
