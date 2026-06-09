@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login - Gem Station</title>
+  <title>Sign Up - Gem Station</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Exo+2:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
@@ -24,33 +24,33 @@
       <div class="auth-logo">GS</div>
       <div>
         <div class="auth-eyebrow">Gem Station Account</div>
-        <h1 class="auth-title">Login ke akun</h1>
+        <h1 class="auth-title">Buat akun baru</h1>
       </div>
     </div>
 
     <div class="auth-switch">
-      <a class="active" href="login.html">Login</a>
-      <a href="signup.html">Sign Up</a>
+      <a href="login.html">Login</a>
+      <a class="active" href="signup.html">Sign Up</a>
     </div>
 
-    <form class="auth-form" id="login-form">
+    <form class="auth-form" id="signup-form">
+      <label class="auth-field">
+        <span>Username</span>
+        <input type="text" id="signup-name" placeholder="Nickname gamer" autocomplete="username" required minlength="3" />
+      </label>
       <label class="auth-field">
         <span>Email</span>
-        <input type="email" id="login-email" placeholder="nama@email.com" autocomplete="email" required />
+        <input type="email" id="signup-email" placeholder="nama@email.com" autocomplete="email" required />
       </label>
       <label class="auth-field">
         <span>Password</span>
-        <input type="password" id="login-password" placeholder="Password" autocomplete="current-password" required />
+        <input type="password" id="signup-password" placeholder="Minimal 6 karakter" autocomplete="new-password" required minlength="6" />
       </label>
-      <div class="auth-row">
-        <label class="auth-check"><input type="checkbox" id="remember-me" /> Ingat saya</label>
-        <a class="auth-link" href="#">Lupa password?</a>
-      </div>
-      <button class="auth-submit" type="submit"><i class="ti ti-login-2"></i> Login</button>
+      <button class="auth-submit" onclick="registerPengguna()" type="submit"><i class="ti ti-user-plus"></i> Buat Akun</button>
     </form>
 
     <div class="auth-message" id="auth-message" aria-live="polite"></div>
-    <p class="auth-footnote">Belum punya akun? <a href="signup.html">Daftar sekarang</a></p>
+    <p class="auth-footnote">Sudah punya akun? <a href="login.html">Masuk di sini</a></p>
   </section>
 </main>
 

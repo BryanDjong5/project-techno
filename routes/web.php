@@ -8,6 +8,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\RatingController;
+use App\Http\Controllers\CartController;
 
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/index.html', [HomeController::class, 'index']);
@@ -36,5 +37,22 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/rating/{orderId}', [RatingController::class, 'showRating']);
     Route::post('/rating', [RatingController::class, 'kirimRating']);
+});
+
+Route::get('/signup', function () {
+    return response()->file(public_path('signup.html'));
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/cart/data',         [CartController::class, 'getCart']);
+    Route::post('/cart/add',         [CartController::class, 'addToCart']);
+    Route::post('/cart/update-qty',  [CartController::class, 'updateQty']);
+    Route::post('/cart/remove',      [CartController::class, 'removeItem']);
+    Route::post('/cart/checkout',    [CartController::class, 'checkout']);
+    Route::post('/cart/clear',       [CartController::class, 'clearCart']);
+
+    Route::get('/cart', function () {
+    return response()->file(public_path('fiturKeranjang.html'));
+});
 });
 

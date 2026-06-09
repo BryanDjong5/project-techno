@@ -10,6 +10,14 @@ class VerifyCsrfToken extends Middleware
      * URI yang tidak dicek CSRF
      */
     protected $except = [
-        '/buy',   // ini sudah cukup untuk POST /buy
+        '/register',
+        '/login',
+        '/buy', 
+        '/rating',
+        '/cart/add',
+        '/cart/update-qty',
+        '/cart/remove',
+        '/cart/checkout',
+        '/cart/clear',  
     ];
 }

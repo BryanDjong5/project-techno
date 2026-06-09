@@ -124,4 +124,36 @@ document.querySelectorAll('.top-game-card')
 
   });
 
+  document.querySelectorAll('.product-card').forEach(card => {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', async () => {
+        const game    = card.querySelector('.product-game').textContent;
+        const name    = card.querySelector('.product-name').textContent;
+        const priceEl = card.querySelector('.product-price');
+        const oldEl   = priceEl.querySelector('.old');
+        let price     = priceEl.innerText;
+        if (oldEl) price = price.replace(oldEl.innerText, '').trim();
+
+        const res = await fetch('/cart/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ game, product: name, price })
+        });
+
+        const data = await res.json();
+
+        if (res.status === 401) {
+            alert('⚠️ Login dulu untuk menambah ke keranjang!');
+            window.location.href = '/login';
+            return;
+        }
+
+        if (data.status) {
+            alert(`✅ ${name} ditambahkan ke keranjang!`);
+        } else {
+            alert('❌ ' + data.message);
+        }
+    });
+});
+
 });
