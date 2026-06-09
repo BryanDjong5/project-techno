@@ -156,4 +156,28 @@ document.querySelectorAll('.top-game-card')
     });
 });
 
+// ===== CEK LOGIN STATUS =====
+async function cekLogin() {
+    try {
+        const res  = await fetch('/user-info', { credentials: 'include' });
+        const data = await res.json();
+
+        const navBtn = document.querySelector('.nav-btn');
+
+        if (data.status) {
+            // Sudah login — ganti tombol jadi avatar + nama
+            navBtn.outerHTML = `
+                <div class="nav-user" onclick="window.location.href='/profile'" style="cursor:pointer">
+                    <div class="nav-avatar">${data.user.name[0].toUpperCase()}</div>
+                    <span class="nav-username">${data.user.name}</span>
+                </div>
+            `;
+        }
+    } catch (err) {
+        console.error('Cek login error:', err);
+    }
+}
+
+cekLogin();
+
 });

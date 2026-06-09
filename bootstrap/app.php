@@ -19,6 +19,10 @@ return Application::configure(basePath: dirname(__DIR__))
             '/sell/create',
             '/sell/delete',
             '/sell/status',
+            '/logout',
+            '/profile/update',
+            '/profile/password',
+            '/profile/delete',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

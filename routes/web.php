@@ -11,6 +11,7 @@ use App\Http\Controllers\RatingController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\SellController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/index.html', [HomeController::class, 'index']);
@@ -69,5 +70,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/sell/create',        [SellController::class, 'createListing']);
     Route::delete('/sell/delete/{id}', [SellController::class, 'deleteListing']);
     Route::post('/sell/status/{id}',   [SellController::class, 'updateStatus']);
+});
+
+Route::get('/profile', [ProfileController::class, 'showProfile']);
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile/data',        [ProfileController::class, 'getProfile']);
+    Route::post('/profile/update',     [ProfileController::class, 'updateProfile']);
+    Route::post('/profile/password',   [ProfileController::class, 'updatePassword']);
+    Route::post('/logout',             [ProfileController::class, 'logout']);
+    Route::post('/profile/delete',     [ProfileController::class, 'deleteAccount']);
 });
 
