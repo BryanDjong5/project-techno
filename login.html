@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Gem Station</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Exo+2:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="auth.css" />
+</head>
+<body class="auth-page">
+
+<nav class="nav">
+  <a class="nav-logo auth-home-link" href="index.html">GEM STATION</a>
+  <div class="nav-links">
+    <a class="nav-link auth-home-link" href="index.html">Beranda</a>
+  </div>
+</nav>
+
+<main class="auth-shell">
+  <section class="auth-panel">
+    <div class="auth-brand">
+      <div class="auth-logo">GS</div>
+      <div>
+        <div class="auth-eyebrow">Gem Station Account</div>
+        <h1 class="auth-title">Login ke akun</h1>
+      </div>
+    </div>
+
+    <div class="auth-switch">
+      <a class="active" href="login.html">Login</a>
+      <a href="signup.html">Sign Up</a>
+    </div>
+
+    <form class="auth-form" id="login-form">
+      <label class="auth-field">
+        <span>Email</span>
+        <input type="email" id="login-email" placeholder="nama@email.com" autocomplete="email" required />
+      </label>
+      <label class="auth-field">
+        <span>Password</span>
+        <input type="password" id="login-password" placeholder="Password" autocomplete="current-password" required />
+      </label>
+      <div class="auth-row">
+        <label class="auth-check"><input type="checkbox" id="remember-me" /> Ingat saya</label>
+        <a class="auth-link" href="#">Lupa password?</a>
+      </div>
+      <button class="auth-submit" type="submit"><i class="ti ti-login-2"></i> Login</button>
+    </form>
+
+    <div class="auth-message" id="auth-message" aria-live="polite"></div>
+    <p class="auth-footnote">Belum punya akun? <a href="signup.html">Daftar sekarang</a></p>
+  </section>
+</main>
+
+<script src="auth.js"></script>
+</body>
+</html>
