@@ -9,6 +9,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ChatController;
 
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/index.html', [HomeController::class, 'index']);
@@ -54,5 +55,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/cart', function () {
     return response()->file(public_path('fiturKeranjang.html'));
 });
+
+Route::get('/chat', [ChatController::class, 'showChat']);
+Route::get('/user-info', [ChatController::class, 'userInfo']);
+Route::post('/chat/send',[ChatController::class, 'send']);
 });
 

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gem Station - Chat Penjual</title>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: #0a0b14;
+            color: #e8eaf6;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* NAV */
+        .nav {
+            background: #0d0f1c;
+            border-bottom: 1px solid rgba(80,120,255,0.18);
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            height: 60px;
+            flex-shrink: 0;
+        }
+        .nav-back {
+            color: #8892b0;
+            text-decoration: none;
+            font-size: 20px;
+        }
+        .nav-back:hover { color: #3a8eff; }
+        .nav-logo {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #3a8eff, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-seller {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 8px;
+        }
+        .seller-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3a8eff, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+        }
+        .seller-info .seller-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .seller-info .seller-status {
+            font-size: 11px;
+            color: #22c55e;
+        }
+        .nav-online {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #8892b0;
+        }
+        .dot-green {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+        }
+
+        /* CHAT AREA */
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .chat-container::-webkit-scrollbar { width: 4px; }
+        .chat-container::-webkit-scrollbar-thumb {
+            background: rgba(80,120,255,0.2);
+            border-radius: 4px;
+        }
+
+        /* DATE DIVIDER */
+        .date-divider {
+            text-align: center;
+            font-size: 11px;
+            color: #8892b0;
+            margin: 8px 0;
+        }
+
+        /* BUBBLE */
+        .bubble-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            width: 100%;
+            margin-bottom: 4px;
+        }
+        .bubble-row.theirs {
+            flex-direction: row;
+        }
+        .bubble-row.mine {
+            flex-direction: row-reverse;
+        }
+        .bubble-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3a8eff, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            align-self: flex-end;
+        }
+        .bubble-wrapper {
+            display: flex;
+            flex-direction: column;
+            max-width: 65%;
+            align-items: flex-start;
+        }
+        .bubble-row.mine .bubble-wrapper {
+            align-items: flex-end;
+        }
+        .bubble {
+            display: inline-block;
+            padding: 10px 14px;
+            border-radius: 16px;
+            font-size: 13px;
+            line-height: 1.5;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+        .bubble-row.theirs .bubble {
+            background: #1e2240;
+            border: 1px solid rgba(80,120,255,0.15);
+            border-bottom-left-radius: 4px;
+            color: #e8eaf6;
+        }
+        .bubble-row.mine .bubble {
+            background: linear-gradient(135deg, #3a8eff, #8b5cf6);
+            border-bottom-right-radius: 4px;
+            color: white;
+        }
+        .bubble-time {
+            font-size: 10px;
+            margin-top: 3px;
+            padding: 0 4px;
+        }
+        .bubble-row.mine .bubble-time {
+            color: #8892b0;
+            text-align: right;
+        }
+        .bubble-row.theirs .bubble-time {
+            color: #8892b0;
+            text-align: left;
+        }
+
+        /* TYPING */
+        .typing {
+            display: none;
+            align-items: flex-end;
+            gap: 8px;
+        }
+        .typing-bubble {
+            background: #1e2240;
+            border: 1px solid rgba(80,120,255,0.15);
+            border-radius: 16px;
+            border-bottom-left-radius: 4px;
+            padding: 12px 16px;
+            display: flex;
+            gap: 4px;
+        }
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #8892b0;
+            border-radius: 50%;
+            animation: typing 1.2s infinite;
+        }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-6px); }
+        }
+
+        /* INPUT */
+        .chat-input-area {
+            background: #0d0f1c;
+            border-top: 1px solid rgba(80,120,255,0.18);
+            padding: 14px 24px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .chat-input {
+            flex: 1;
+            background: #1a1d2e;
+            border: 1px solid rgba(80,120,255,0.2);
+            border-radius: 24px;
+            padding: 10px 18px;
+            color: #e8eaf6;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .chat-input:focus { border-color: #3a8eff; }
+        .chat-input::placeholder { color: #8892b0; }
+        .btn-send {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3a8eff, #8b5cf6);
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.15s;
+            flex-shrink: 0;
+        }
+        .btn-send:hover { opacity: 0.85; }
+
+        /* EMPTY */
+        .chat-empty {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #8892b0;
+            gap: 8px;
+        }
+        .chat-empty-icon { font-size: 48px; }
+        .chat-empty-text { font-size: 14px; }
+
+        /* LOGIN WARNING */
+        .login-warning {
+            display: none;
+            margin: 20px 24px;
+            padding: 14px;
+            background: rgba(239,68,68,0.1);
+            border: 1px solid rgba(239,68,68,0.3);
+            border-radius: 10px;
+            color: #fca5a5;
+            font-size: 13px;
+            text-align: center;
+        }
+        .login-warning a { color: #3a8eff; }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav">
+    <a class="nav-back" href="/">←</a>
+    <div class="nav-logo">💎 GS</div>
+    <div class="nav-seller">
+        <div class="seller-avatar" id="sellerAvatar">S</div>
+        <div class="seller-info">
+            <div class="seller-name" id="sellerName">Admin GemStore</div>
+            <div class="seller-status">● Online</div>
+        </div>
+    </div>
+    <div class="nav-online">
+        <div class="dot-green"></div>
+        <span id="onlineCount">1 online</span>
+    </div>
+</div>
+
+<!-- LOGIN WARNING -->
+<div class="login-warning" id="loginWarning">
+    ⚠️ Kamu harus <a href="/login">login</a> dulu untuk bisa chat.
+</div>
+
+<!-- CHAT -->
+<div class="chat-container" id="chatContainer">
+    <div class="chat-empty" id="chatEmpty">
+        <div class="chat-empty-icon">💬</div>
+        <div class="chat-empty-text"></div>
+    </div>
+    <div class="typing" id="typing">
+        <div class="bubble-avatar">S</div>
+        <div class="typing-bubble">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        </div>
+    </div>
+</div>
+
+<!-- INPUT -->
+<div class="chat-input-area">
+    <input class="chat-input" id="chatInput"
+        type="text"
+        placeholder="Ketikkan pesan..."
+        onkeydown="if(event.key==='Enter') kirimPesan()" />
+    <button class="btn-send" onclick="kirimPesan()">➤</button>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="/chat.js"></script>
+</body>
+</html>
