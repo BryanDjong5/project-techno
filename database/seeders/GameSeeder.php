@@ -23,7 +23,10 @@ class GameSeeder extends Seeder
     ];
 
     foreach ($games as $game) {
-        \App\Models\Game::create($game);
+       \App\Models\Game::firstOrCreate(
+            ['name' => $game['name']],
+            ['category' => $game['category']]
+        );
     }
 }
 }

@@ -1,46 +1,46 @@
 (function () {
-    console.log("searchGame.js loaded ✅");
 
     const searchInput = document.getElementById('search');
-    const resultsBox = document.getElementById('results');
+    const resultsBox  = document.getElementById('results');
 
-    console.log("searchInput:", searchInput);
-    console.log("resultsBox:", resultsBox);
-
-    if (!searchInput || !resultsBox) {
-        console.error("❌ Element #search atau #results tidak ditemukan!");
-        return;
-    }
+    if (!searchInput || !resultsBox) return;
 
     let debounceTimer;
 
     searchInput.addEventListener('keyup', function () {
         clearTimeout(debounceTimer);
+
         const keyword = this.value.trim();
-        console.log("Keyword:", keyword);
 
         if (keyword.length === 0) {
-            resultsBox.innerHTML = '';
+            resultsBox.innerHTML     = '';
             resultsBox.style.display = 'none';
+
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.style.display = 'block';
+            });
             return;
         }
 
-        debounceTimer = setTimeout(() => {
-            const url = `/search-game?keyword=${encodeURIComponent(keyword)}`;
-            console.log("Fetching:", url);
+        // Filter card DOM dulu (instant)
+        document.querySelectorAll('.product-card').forEach(card => {
+            const gameName = card.querySelector('.product-game')?.innerText.toLowerCase() || '';
+            const prodName = card.querySelector('.product-name')?.innerText.toLowerCase() || '';
+            card.style.display = (
+                gameName.includes(keyword.toLowerCase()) ||
+                prodName.includes(keyword.toLowerCase())
+            ) ? 'block' : 'none';
+        });
 
-            fetch(url)
-                .then(res => {
-                    console.log("Status:", res.status);
-                    return res.json();
-                })
+        // Fetch API untuk dropdown
+        debounceTimer = setTimeout(() => {
+            fetch(`/search-game?keyword=${encodeURIComponent(keyword)}`)
+                .then(res => res.json())
                 .then(games => {
-                    console.log("Response:", games);
                     resultsBox.innerHTML = '';
 
                     if (!games.length) {
-                        resultsBox.innerHTML = `<div class="result-empty">Game tidak ditemukan</div>`;
-                        resultsBox.style.display = 'block';
+                        resultsBox.style.display = 'none';
                         return;
                     }
 
@@ -52,24 +52,30 @@
                             <span class="result-cat">${game.category ?? ''}</span>
                         `;
                         item.addEventListener('click', () => {
-                            searchInput.value = game.name;
-                            resultsBox.innerHTML = '';
+                            searchInput.value        = game.name;
+                            resultsBox.innerHTML     = '';
                             resultsBox.style.display = 'none';
+
+                            localStorage.setItem('selectedGame',    game.name);
+                            localStorage.setItem('selectedProduct', game.name + ' Top Up');
+                            localStorage.setItem('selectedPrice',   '');
+
+                            window.location.href = '/buy';
                         });
                         resultsBox.appendChild(item);
                     });
 
                     resultsBox.style.display = 'block';
                 })
-                .catch(err => {
-                    console.error("❌ Fetch error:", err);
+                .catch(() => {
+                    resultsBox.style.display = 'none';
                 });
         }, 300);
     });
 
     document.addEventListener('click', function (e) {
         if (!searchInput.contains(e.target) && !resultsBox.contains(e.target)) {
-            resultsBox.innerHTML = '';
+            resultsBox.innerHTML     = '';
             resultsBox.style.display = 'none';
         }
     });
