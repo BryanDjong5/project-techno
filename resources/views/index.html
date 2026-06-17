@@ -20,7 +20,7 @@
   </div>
   <div class="nav-links">
     <div class="nav-link">Game Key</div>
-    <div class="nav-link">Top Up</div>
+    <div class="nav-link" onclick="document.getElementById('hot-deals').scrollIntoView({ behavior: 'smooth' })" style="cursor:pointer">Top Up</div>
     <div class="nav-link" onclick="window.location.href='/cart'" style="cursor:pointer">Cart</div>
     <div class="nav-link" onclick="window.location.href='/sell'" style="cursor:pointer">Sell</div>
     <div class="nav-link" onclick="window.location.href='/chat'" style="cursor:pointer">💬 Chat</div>
@@ -114,7 +114,7 @@
     </div>
 
     <!-- PRODUCTS -->
-    <div class="section-header">
+    <div class="section-header" id="hot-deals">
       <div class="section-title"><span>Hot</span> Deals</div>
       <div class="see-all">See all →</div>
     </div>
