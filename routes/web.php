@@ -46,6 +46,10 @@ Route::get('/signup', function () {
     return response()->file(public_path('signup.html'));
 });
 
+Route::get('/cart', function () {
+    return response()->file(public_path('fiturKeranjang.html'));
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('/cart/data',         [CartController::class, 'getCart']);
     Route::post('/cart/add',         [CartController::class, 'addToCart']);

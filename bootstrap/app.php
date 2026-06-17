@@ -12,9 +12,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->redirectGuestsTo('/login');
+
         $middleware->validateCsrfTokens(except: [
             '/buy',
             '/rating',
+            '/login',
             '/chat/send',
             '/sell/create',
             '/sell/delete',

@@ -165,7 +165,6 @@ async function cekLogin() {
         const navBtn = document.querySelector('.nav-btn');
 
         if (data.status) {
-            // Sudah login — ganti tombol jadi avatar + nama
             navBtn.outerHTML = `
                 <div class="nav-user" onclick="window.location.href='/profile'" style="cursor:pointer">
                     <div class="nav-avatar">${data.user.name[0].toUpperCase()}</div>

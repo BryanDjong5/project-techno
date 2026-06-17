@@ -14,103 +14,166 @@ function getEmoji(game) {
 }
 
 function parseHarga(str) {
-    return parseInt(str.replace(/[^0-9]/g, '')) || 0;
+    return parseInt(str.toString().replace(/[^0-9]/g, '')) || 0;
 }
 
 function formatHarga(num) {
     return 'Rp ' + num.toLocaleString('id-ID');
 }
 
-function loadCart() {
-    return JSON.parse(localStorage.getItem('cart') || '[]');
-}
+let cartData = [];
 
-function saveCart(cart) {
-    localStorage.setItem('cart', JSON.stringify(cart));
-}
-
-function renderCart() {
-    const cart = loadCart();
-    const list = document.getElementById('daftar-belanja');
-    const empty = document.getElementById('emptyState');
+async function renderCart() {
+    const list    = document.getElementById('daftar-belanja');
+    const empty   = document.getElementById('emptyState');
     const summary = document.getElementById('summary');
 
-    list.innerHTML = '';
+    try {
+        // Cek login
+        const loginRes  = await fetch('/user-info', { credentials: 'include' });
+        const loginData = await loginRes.json();
 
-    if (cart.length === 0) {
+        if (!loginData.status) {
+            empty.style.display   = 'block';
+            summary.style.display = 'none';
+            list.innerHTML        = '';
+            empty.innerHTML       = `
+                <div class="empty-icon">🛒</div>
+                <div class="empty-text">Wah, keranjang belanja kamu masih kosong!</div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:4px;">
+                    <button class="btn-shop"  onclick="window.location.href='/'">🛍️ Belanja Sekarang</button>
+                    <button class="btn-login" onclick="window.location.href='/login'">🔑 Login Sekarang</button>
+                </div>
+            `;
+            return;
+        }
+
+        // Ambil cart dari Firebase via Laravel
+        const cartRes  = await fetch('/cart/data', { credentials: 'include' });
+        const cartJson = await cartRes.json();
+
+        cartData       = cartJson.data || [];
+        list.innerHTML = '';
+
+        if (cartData.length === 0) {
+            empty.style.display   = 'block';
+            summary.style.display = 'none';
+            empty.innerHTML       = `
+                <div class="empty-icon">🛒</div>
+                <div class="empty-text">Wah, keranjang belanja kamu masih kosong!</div>
+                <button class="btn-shop" onclick="window.location.href='/'">🛍️ Mulai Belanja</button>
+            `;
+            return;
+        }
+
+        empty.style.display   = 'none';
+        summary.style.display = 'block';
+
+        let subtotal = 0;
+
+        cartData.forEach((item, index) => {
+            const harga = parseHarga(item.price);
+            const total = harga * (item.qty || 1);
+            subtotal   += total;
+
+            const div = document.createElement('div');
+            div.classList.add('cart-item');
+            div.innerHTML = `
+                <div class="cart-icon">${getEmoji(item.game)}</div>
+                <div class="cart-info">
+                    <div class="cart-game">${item.game}</div>
+                    <div class="cart-name">${item.product}</div>
+                    <div class="cart-price">${formatHarga(total)}</div>
+                </div>
+                <div class="cart-qty">
+                    <button class="qty-btn" onclick="changeQty(${index}, -1)">−</button>
+                    <span class="qty-val">${item.qty || 1}</span>
+                    <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+                </div>
+                <button class="cart-delete" onclick="removeItem(${index})">🗑️</button>
+            `;
+            list.appendChild(div);
+        });
+
+        document.getElementById('subtotal').innerText = formatHarga(subtotal);
+        document.getElementById('total').innerText    = formatHarga(subtotal);
+
+    } catch (err) {
+        console.error(err);
         empty.style.display = 'block';
-        summary.style.display = 'none';
-        return;
-    }
-
-    empty.style.display = 'none';
-    summary.style.display = 'block';
-
-    let subtotal = 0;
-
-    cart.forEach((item, index) => {
-        const harga = parseHarga(item.price);
-        const total = harga * item.qty;
-        subtotal += total;
-
-        const div = document.createElement('div');
-        div.classList.add('cart-item');
-        div.innerHTML = `
-            <div class="cart-icon">${getEmoji(item.game)}</div>
-            <div class="cart-info">
-                <div class="cart-game">${item.game}</div>
-                <div class="cart-name">${item.name}</div>
-                <div class="cart-price">${formatHarga(total)}</div>
-            </div>
-            <div class="cart-qty">
-                <button class="qty-btn" onclick="changeQty(${index}, -1)">−</button>
-                <span class="qty-val">${item.qty}</span>
-                <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
-            </div>
-            <button class="cart-delete" onclick="removeItem(${index})">🗑️</button>
+        empty.innerHTML     = `
+            <div class="empty-icon">⚠️</div>
+            <div class="empty-text">Gagal memuat keranjang. Coba refresh halaman.</div>
         `;
-        list.appendChild(div);
+    }
+}
+
+async function getCsrf() {
+    const res  = await fetch('/csrf-token');
+    const data = await res.json();
+    return data.token;
+}
+
+async function changeQty(index, delta) {
+    const item   = cartData[index];
+    const newQty = (item.qty || 1) + delta;
+    const token  = await getCsrf();
+
+    await fetch('/cart/update-qty', {
+        method:      'POST',
+        headers:     { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
+        credentials: 'include',
+        body:        JSON.stringify({ key: item._key, qty: newQty })
     });
 
-    document.getElementById('subtotal').innerText = formatHarga(subtotal);
-    document.getElementById('total').innerText = formatHarga(subtotal);
-}
-
-function changeQty(index, delta) {
-    const cart = loadCart();
-    cart[index].qty += delta;
-    if (cart[index].qty <= 0) {
-        cart.splice(index, 1);
-    }
-    saveCart(cart);
     renderCart();
 }
 
-function removeItem(index) {
-    const cart = loadCart();
-    cart.splice(index, 1);
-    saveCart(cart);
+async function removeItem(index) {
+    const item  = cartData[index];
+    const token = await getCsrf();
+
+    await fetch('/cart/remove', {
+        method:      'POST',
+        headers:     { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
+        credentials: 'include',
+        body:        JSON.stringify({ key: item._key })
+    });
+
     renderCart();
 }
 
-function clearCart() {
-    if (confirm('Kosongkan semua keranjang?')) {
-        localStorage.removeItem('cart');
-        renderCart();
-    }
+async function clearCart() {
+    if (!confirm('Kosongkan semua keranjang?')) return;
+
+    const token = await getCsrf();
+
+    await fetch('/cart/clear', {
+        method:      'POST',
+        headers:     { 'X-CSRF-TOKEN': token },
+        credentials: 'include'
+    });
+
+    renderCart();
 }
 
-function checkout() {
-    const cart = loadCart();
-    if (cart.length === 0) return;
+async function checkout() {
+    const token = await getCsrf();
 
-    // Ambil item pertama untuk di-checkout
-    const item = cart[0];
-    localStorage.setItem('selectedGame', item.game);
-    localStorage.setItem('selectedProduct', item.name);
-    localStorage.setItem('selectedPrice', item.price);
+    const res  = await fetch('/cart/checkout', {
+        method:      'POST',
+        headers:     { 'X-CSRF-TOKEN': token },
+        credentials: 'include'
+    });
 
-    window.location.href = '/buy';
+    const data = await res.json();
+
+    if (data.status) {
+        alert('✅ Checkout berhasil! Sisa saldo: Rp ' + data.balance.toLocaleString('id-ID'));
+        window.location.href = '/';
+    } else {
+        alert('❌ ' + data.message);
+    }
 }
 
 renderCart();
