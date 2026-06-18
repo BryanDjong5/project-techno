@@ -1,9 +1,7 @@
 {
   "version": 2,
-  "framework": null,
-  "buildCommand": "composer install && npm run build",
+  "buildCommand": "npm install && npm run build",
   "outputDirectory": "public",
-  "functions": {},
   "routes": [
     {
       "src": "/(.*)",
