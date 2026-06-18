@@ -24,3 +24,9 @@ storage/firebase/
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
