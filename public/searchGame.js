@@ -22,7 +22,6 @@
             return;
         }
 
-        // Filter card DOM dulu (instant)
         document.querySelectorAll('.product-card').forEach(card => {
             const gameName = card.querySelector('.product-game')?.innerText.toLowerCase() || '';
             const prodName = card.querySelector('.product-name')?.innerText.toLowerCase() || '';
@@ -60,7 +59,7 @@
                             localStorage.setItem('selectedProduct', game.name + ' Top Up');
                             localStorage.setItem('selectedPrice',   '');
 
-                            window.location.href = '/buy';
+                            window.location.href = '/buy.html';
                         });
                         resultsBox.appendChild(item);
                     });
