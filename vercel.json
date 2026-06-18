@@ -1,13 +1,9 @@
 {
   "version": 2,
   "framework": null,
-  "buildCommand": "npm run build",
+  "buildCommand": "composer install && npm run build",
   "outputDirectory": "public",
-  "functions": {
-    "api/index.php": {
-      "runtime": "vercel-php@0.7.2"
-    }
-  },
+  "functions": {},
   "routes": [
     {
       "src": "/(.*)",
