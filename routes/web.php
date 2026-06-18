@@ -12,6 +12,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\SellController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ForgotPasswordController;
 
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/index.html', [HomeController::class, 'index']);
@@ -85,4 +86,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout',             [ProfileController::class, 'logout']);
     Route::post('/profile/delete',     [ProfileController::class, 'deleteAccount']);
 });
+
+Route::get('/forgot-password',            [ForgotPasswordController::class, 'showForgot']);
+Route::post('/forgot-password/send-otp',  [ForgotPasswordController::class, 'sendOtp']);
+Route::post('/forgot-password/verify-otp',[ForgotPasswordController::class, 'verifyOtp']);
+Route::post('/forgot-password/reset',     [ForgotPasswordController::class, 'resetPassword']);
 

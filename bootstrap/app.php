@@ -26,6 +26,9 @@ return Application::configure(basePath: dirname(__DIR__))
             '/profile/update',
             '/profile/password',
             '/profile/delete',
+            '/forgot-password/send-otp',
+            '/forgot-password/verify-otp',
+            '/forgot-password/reset',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
